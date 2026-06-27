@@ -586,7 +586,7 @@ body::after {
 
 /* Text hướng dẫn đóng */
 .guide-content::after {
-  content: '✖ Nhấn vào bất kỳ đâu để đóng';
+  content: '✖ Nhấn vào ngoài hình bất kỳ đâu để đóng ✖';
   position: absolute;
   bottom: -30px;
   left: 50%;

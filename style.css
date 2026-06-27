@@ -416,7 +416,7 @@ body::after {
   box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0,0,0,0.2);
 }
 
-/* nút Xếp Số và Nhạc */
+/* nút Xếp Số, Hình Mẫu và Nhạc */
 .action-area {
   display: flex;
   justify-content: center;
@@ -429,18 +429,18 @@ body::after {
 
 .button-group {
   display: flex;
-  gap: 10px;
+  gap: 6px;
   width: 100%;
-  max-width: 280px;
+  max-width: 320px;
   align-items: center;
 }
 
 .btn-shuffle {
-  flex: 1;
+  flex: 1.2;
   border: none;
   padding: 10px 0;
   border-radius: 50px;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #f0f0f0;
   cursor: pointer;
@@ -455,6 +455,35 @@ body::after {
 .btn-shuffle:active {
   transform: translateY(4px);
   box-shadow: 0 1px 0 #0f4a40;
+}
+
+/* Nút Hình Mẫu */
+.btn-guide {
+  flex: 0.8;
+  border: none;
+  padding: 10px 0;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #f0f0f0;
+  cursor: pointer;
+  transition: all 0.08s ease;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 0 rgba(0,0,0,0.3);
+  background: linear-gradient(145deg, #6b3f2a, #8b5f3a);
+  box-shadow: 0 5px 0 #4a2a18, 0 6px 16px rgba(0,0,0,0.6);
+  border: 1px solid #a87a5a;
+}
+
+.btn-guide:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #4a2a18;
+}
+
+.btn-guide.active {
+  background: linear-gradient(145deg, #c62828, #b71c1c);
+  border-color: #ff6b6b;
+  box-shadow: 0 5px 0 #7f0000, 0 6px 16px rgba(0,0,0,0.6);
 }
 
 /* Nút nhạc */
@@ -505,6 +534,66 @@ body::after {
 
 .footer span {
   color: rgba(255, 255, 255, 0.8);
+}
+
+/* Overlay hiển thị ảnh hướng dẫn */
+.guide-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+  cursor: pointer;
+}
+
+.guide-overlay.active {
+  display: flex;
+}
+
+.guide-content {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+  position: relative;
+  cursor: default;
+}
+
+.guide-content img {
+  width: 350px;
+  height: 350px;
+  object-fit: contain;
+  border-radius: 10px;
+  display: block;
+  max-width: 90vw;
+  max-height: 80vh;
+}
+
+/* Hiệu ứng hover cho ảnh */
+.guide-content img:hover {
+  transform: scale(1.02);
+  transition: transform 0.3s ease;
+}
+
+/* Text hướng dẫn đóng */
+.guide-content::after {
+  content: '✖ Nhấn vào bất kỳ đâu để đóng';
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.7rem;
+  white-space: nowrap;
 }
 
 /* Thông báo hoàn thành */
@@ -564,7 +653,7 @@ body::after {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.9); }
+  from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
 }
 
@@ -604,7 +693,12 @@ body::after {
   }
   
   .btn-shuffle {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
+    padding: 12px 0;
+  }
+  
+  .btn-guide {
+    font-size: 0.95rem;
     padding: 12px 0;
   }
   
@@ -616,8 +710,13 @@ body::after {
   }
   
   .button-group {
-    max-width: 300px;
-    gap: 12px;
+    max-width: 330px;
+    gap: 8px;
+  }
+  
+  .guide-content img {
+    width: 350px;
+    height: 350px;
   }
   
   .footer {
@@ -654,7 +753,12 @@ body::after {
   }
   
   .btn-shuffle {
-    font-size: 0.9rem;
+    font-size: 0.75rem;
+    padding: 8px 0;
+  }
+  
+  .btn-guide {
+    font-size: 0.65rem;
     padding: 8px 0;
   }
   
@@ -666,8 +770,18 @@ body::after {
   }
   
   .button-group {
-    max-width: 200px;
-    gap: 6px;
+    max-width: 230px;
+    gap: 4px;
+  }
+  
+  .guide-content img {
+    width: 280px;
+    height: 280px;
+  }
+  
+  .guide-content::after {
+    font-size: 0.6rem;
+    bottom: -25px;
   }
   
   .footer {
@@ -730,11 +844,16 @@ body::after {
   }
   
   .button-group {
-    max-width: 200px;
+    max-width: 230px;
   }
   
   .btn-shuffle {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
+    padding: 6px 0;
+  }
+  
+  .btn-guide {
+    font-size: 0.6rem;
     padding: 6px 0;
   }
   
@@ -743,6 +862,16 @@ body::after {
     height: 34px;
     min-width: 34px;
     font-size: 1rem;
+  }
+  
+  .guide-content img {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .guide-content::after {
+    font-size: 0.5rem;
+    bottom: -20px;
   }
   
   .footer {

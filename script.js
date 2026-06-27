@@ -2,6 +2,8 @@
   const grid = document.getElementById('gridContainer');
   const shuffleBtn = document.getElementById('shuffleBtn');
   const musicBtn = document.getElementById('musicBtn');
+  const guideBtn = document.getElementById('guideBtn');
+  const guideOverlay = document.getElementById('guideOverlay');
 
   // Trạng thái game
   let tiles = [];
@@ -12,6 +14,9 @@
   let audio = null;
   let isMusicPlaying = false;
 
+  // Trạng thái ảnh hướng dẫn
+  let isGuideVisible = false;
+
   // Khởi tạo audio
   function initAudio() {
     try {
@@ -20,7 +25,6 @@
       audio.volume = 0.5;
       audio.preload = 'auto';
       
-      // Xử lý lỗi khi không tìm thấy file
       audio.addEventListener('error', function(e) {
         console.log('⚠️ Không tìm thấy file xepso.mp3');
         musicBtn.style.opacity = '0.3';
@@ -44,7 +48,6 @@
       musicBtn.classList.add('muted');
       musicBtn.textContent = '🔇';
     } else {
-      // Thử phát nhạc
       const playPromise = audio.play();
       if (playPromise !== undefined) {
         playPromise.then(() => {
@@ -53,7 +56,6 @@
           musicBtn.textContent = '🔊';
         }).catch(error => {
           console.log('⚠️ Không thể phát nhạc:', error);
-          // Thử lại sau 1 giây
           setTimeout(() => {
             audio.play().then(() => {
               isMusicPlaying = true;
@@ -74,6 +76,38 @@
       musicBtn.classList.add('muted');
       musicBtn.textContent = '🔇';
     }
+  }
+
+    // Bật/tắt ảnh hướng dẫn
+  function toggleGuide() {
+    isGuideVisible = !isGuideVisible;
+    if (isGuideVisible) {
+      guideOverlay.classList.add('active');
+      guideBtn.classList.add('active');
+      guideBtn.textContent = '❌ Đóng';
+      // Chặn cuộn trang khi mở ảnh
+      document.body.style.overflow = 'hidden';
+    } else {
+      guideOverlay.classList.remove('active');
+      guideBtn.classList.remove('active');
+      guideBtn.textContent = '📖 Hình Mẫu';
+      document.body.style.overflow = '';
+    }
+  }
+
+  // Đóng ảnh hướng dẫn khi click bất kỳ đâu (cả overlay và ảnh)
+  guideOverlay.addEventListener('click', function(e) {
+    // Click vào bất kỳ đâu trong overlay đều đóng
+    toggleGuide();
+  });
+
+  // Ngăn sự kiện click từ ảnh lan ra ngoài (không cần thiết vì đã dùng toggle)
+  // Nhưng giữ lại để đảm bảo
+  const guideImage = document.getElementById('guideImage');
+  if (guideImage) {
+    guideImage.addEventListener('click', function(e) {
+      e.stopPropagation(); // Không cần thiết vì toggleGuide đã xử lý
+    });
   }
 
   // Khởi tạo trạng thái đúng (1..15, 0 cuối)
@@ -120,7 +154,7 @@
     if (isSolved(tiles)) {
       isGameOver = true;
       showWinPopup();
-      stopMusic(); // Dừng nhạc khi thắng
+      stopMusic();
     }
     return true;
   }
@@ -190,7 +224,6 @@
     const popup = document.getElementById('winOverlay');
     if (popup) popup.remove();
     
-    // Bật nhạc khi bắt đầu ván mới (nếu đã bật trước đó)
     if (isMusicPlaying) {
       audio.play().catch(() => {});
     }
@@ -233,10 +266,8 @@
     const popup = document.getElementById('winOverlay');
     if (popup) popup.remove();
     
-    // Khởi tạo audio
     initAudio();
     
-    // Mặc định bật nhạc (nếu có file)
     setTimeout(() => {
       if (audio) {
         toggleMusic();
@@ -252,6 +283,11 @@
   // Sự kiện nút Nhạc
   musicBtn.addEventListener('click', function() {
     toggleMusic();
+  });
+
+  // Sự kiện nút Hình Mẫu
+  guideBtn.addEventListener('click', function() {
+    toggleGuide();
   });
 
   // Chặn chuột phải (không chặn F12)
